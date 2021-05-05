@@ -1,0 +1,85 @@
+'''
+Created on May 4, 2021
+
+@author: Johnny Jiang
+'''
+
+'''
+recently got into Helium mining, but I wanted to understand the reward structure more so I built a webscraper to get about 1000 miner data in canada. 
+This code only collects data the hotspot name, H3 index, reward scale, # of withness, # of close by hotspots. 
+You can gather the list of hotspots using sitebot.com 
+currently in progress analysing the data in R
+'''
+
+from selenium import webdriver
+import pandas as pd
+import time 
+
+wd = webdriver.Chrome(executable_path="C:/Users/Johnny Jiang/Downloads/chromedriver.exe")
+
+
+def getinfo(url, counter):
+    #elem = wd.find_element_by_xpath('//*[@id="rc-tabs-0-tab-1"]')
+    #elem.click()
+    print(counter)
+    
+    wd.get(url)
+    
+    time.sleep(3)
+    
+    name = wd.find_element_by_xpath('//*[@id="app"]/section/main/div[1]/div[1]/div[3]/div/div/div[2]/h1').text
+    h3 = wd.find_element_by_xpath('//*[@id="app"]/section/main/div[1]/div[1]/div[2]/div/span/span').text
+    reward_scale = wd.find_element_by_xpath('//*[@id="app"]/section/main/div[1]/div[1]/div[3]/div/div/div[1]/div[2]/p').text
+    
+    witness = wd.find_element_by_xpath('/html/body/div/div/section/main/div[2]/div/div/div[2]/div/div[1]/div/div[1]/div/div/span').text
+    a = witness.split("(")
+    witness = a[1]
+    a = witness.split(")")
+    witness = a[0]
+    
+    
+    elem = wd.find_element_by_xpath('//*[@id="rc-tabs-0-tab-2"]')
+    elem.click()
+    
+    nearby = wd.find_element_by_xpath('//*[@id="rc-tabs-0-panel-2"]/div/div[1]/div/div/span').text
+    a = nearby.split("(")
+    nearby = a[1]
+    a = nearby.split(")")
+    nearby = a[0]
+    
+    
+    data["Name"].append(name)
+    data["H3"].append(h3)
+    data["Reward Scale"].append(reward_scale)    
+    data["Recent Witness"].append(witness)
+    data["Nearby Hotspots"].append(nearby)
+    
+    counter += 1
+    
+    return counter
+
+
+data = {'Name':  [],
+        'H3': [],
+        'Reward Scale': [],
+        'Recent Witness': [],
+        'Nearby Hotspots': []}
+
+df = pd.DataFrame (data, columns = ['Name','H3','Reward Scale', 'Recent Witness', 'Nearby Hotspots'])
+#print (df)
+    
+website_list = pd.read_excel (r'C:\Users\Johnny Jiang\Downloads\Name_hotspots2.xlsx')
+
+counter = 1
+
+for index, row in website_list.iterrows():
+    url = row['website']
+    counter = getinfo(url, counter)
+    
+    
+    
+print("done")
+df = pd.DataFrame (data, columns = ['Name','H3','Reward Scale', 'Recent Witness', 'Nearby Hotspots'])
+print(df)
+
+df.to_excel("output.xlsx")
