@@ -1,0 +1,110 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+```{r}
+summary(hotspot)
+```
+
+filter outliers
+```{r}
+set = filter(hotspot, rewards_30d <= 557.76098)
+set = filter(set, name != "raspy daffodil parakeet")
+
+
+summary (set)
+```
+
+
+
+
+"setting varaibles"
+```{r}
+attach(hotspot)
+name <- (name)
+H3 <- (H3)
+RScale <- (pos = 3)
+Witness <- (pos = 4)
+Nearby <-(pos = 5)
+reward_30 <- (rewards_30d)
+```
+
+
+Box plot for 30 day rewards
+```{r}
+C=boxplot(reward_30)
+
+Z=boxplot(reward_30, outline=FALSE)
+
+mytable <- Z$stats
+colnames(mytable)<-Z$names
+rownames(mytable)<-c('min','lower quartile','median','upper quartile','max')
+mytable 
+```
+
+relationship between witness to rewards
+```{r}
+ggplot(set)+geom_smooth(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward")
+
+
+ggplot(set, aes(x = `Recent Witness`))+geom_smooth(aes(y = rewards_30d),color=RewardColor)+geom_smooth(aes(y = `Reward Scale`*250),color=ScaleColor)+ggtitle("Recent Witness and 30d reward")+scale_y_continuous(sec.axis = sec_axis(trans = ~ . /250, name="Reward Scale")) +
+  labs(y = "Reward 30d")
+
+
+#ggplot(set)+geom_line(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward")
+#ggplot(set)+geom_point(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward Scatterplot")
+#ggplot(set)+geom_boxplot(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward Boxplot")
+```
+```{r}
+x=c(set$`Recent Witness`)
+y=c(set$rewards_30d)
+
+plot(y~x)
+
+Estimate = lm(y ~ x)
+logEstimate = lm(y ~ log(x))
+
+plot(x,predict(Estimate),type='l',col='blue')
+lines(x,predict(logEstimate),col='red')
+points(x,y)
+```
+
+relationship between witness to rewards
+```{r}
+RewardColor <- "#69b3a2"
+ScaleColor <- rgb(0.2, 0.6, 0.9, 1)
+
+
+ggplot(set, aes(x = `Nearby Hotspots`))+geom_smooth(aes(y = rewards_30d),color=RewardColor)+geom_smooth(aes(y = `Reward Scale`*250),color=ScaleColor)+ggtitle("Nearby Hotspots and 30d reward")+scale_y_continuous(sec.axis = sec_axis(trans = ~ . /250, name="Reward Scale")) +
+  labs(y = "Reward 30d")
+#ggplot(set)+geom_line(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward")
+#ggplot(set)+geom_point(aes(`Recent Witness`,rewards_30d))+ggtitle("Recent Witness and 30d reward Scatterplot")
+#ggplot(set)+geom_boxplot(aes(`Nearby Hotspots`,rewards_30d))+ggtitle("Nearby Hotspots and 30d reward Boxplot")
+```
+
+
+
+
+```{r}
+
+set2 = filter(hotspot, rewards_30d <= 557.76098)
+set2 = filter(set2, rewards_30d >= 10)
+
+
+
+ggplot(set2,aes(rewards_30d))+geom_histogram(bins = 50)+ggtitle("Reward 30D Distribution Histogram")
+  
+ggplot(set2,aes(rewards_30d))+geom_density()+ggtitle("Reward 30D Density Plot")
+
+histrv <- hist(set2$rewards_30d, breaks = 50)
+
+histrv$breaks
+histrv$counts
+```
