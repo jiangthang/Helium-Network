@@ -14,3 +14,6 @@ Attached files:
 - python code for webscraper
 - R code for data anlysis
 - various excel and csv files for the data
+
+Here is the Medium Article
+https://jiangthang.medium.com/helium-mining-reward-distribution-fdc6ec657afc
