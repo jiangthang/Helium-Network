@@ -8,3 +8,9 @@
 jiangthang/jiangthang is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 You can click the Preview link to take a look at your changes.
 --->
+
+This repository is for my analysis on Helium Network
+Attached files:
+- python code for webscraper
+- R code for data anlysis
+- various excel and csv files for the data
