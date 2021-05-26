@@ -6,7 +6,7 @@ Created on Feb 20, 2021
 
 '''
 recently got into Helium mining, but I wanted to understand the reward structure more so I built a webscraper to get about 1000 miner data in canada. 
-This code only collects data the hotspot name, H3 index, reward scale, # of withness, # of close by hotspots. 
+This code only collects data on the hotspot name, H3 index, reward scale, # of withness, # of close by hotspots. 
 You can gather the list of hotspots using sitebot.com 
 currently in progress analysing the data in R
 '''
